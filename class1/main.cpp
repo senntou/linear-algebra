@@ -8,14 +8,6 @@
 
 #define N 5
 
-template <typename T> void vector_shift(Eigen::Vector<T, N> &v, int shift) {
-  Eigen::Vector<T, N> tmp = v;
-  for (int i = 0; i < N; i++) {
-    tmp(i) = v((i - shift + N) % N);
-  }
-  v = tmp;
-}
-
 int main() {
 
   // (1) 畳み込み演算
@@ -61,8 +53,17 @@ int main() {
   print_vector("b", b);
 
   // (4) 信号の復元
+  // 回帰
   Eigen::Vector<double, N> x_hat =
       (A.transpose() * A).inverse() * A.transpose() * b;
+  print_vector("x_hat", x_hat);
+
+  // リッジ回帰
+  double lambda = 0.1;
+  x_hat = (A.transpose() * A + lambda * Eigen::Matrix<double, N, N>::Identity())
+              .inverse() *
+          A.transpose() * b;
+
   print_vector("x_hat", x_hat);
 
   return 0;
