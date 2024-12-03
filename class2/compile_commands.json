@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-I",
+      "/usr/include",
+      "-I",
+      "/usr/include/opencv4",
+      "-c",
+      "-o",
+      "out/main.o",
+      "main.cpp"
+    ],
+    "directory": "/home/saibo/workspace/la/class2",
+    "file": "/home/saibo/workspace/la/class2/main.cpp",
+    "output": "/home/saibo/workspace/la/class2/out/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-I",
+      "/usr/include",
+      "-I",
+      "/usr/include/opencv4",
+      "-c",
+      "-o",
+      "out/utils.o",
+      "utils.cpp"
+    ],
+    "directory": "/home/saibo/workspace/la/class2",
+    "file": "/home/saibo/workspace/la/class2/utils.cpp",
+    "output": "/home/saibo/workspace/la/class2/out/utils.o"
+  }
+]
