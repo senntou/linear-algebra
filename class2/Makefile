@@ -2,7 +2,6 @@
 CXX = g++
 
 # コンパイルフラグ
-# CXXFLAGS = -Wall -Wextra -std=c++17 -O2
 CXXFLAGS = -std=c++17 -O2 -I /usr/include -I /usr/include/opencv4 
 LIBS = `pkg-config --cflags --libs opencv4`
 
@@ -11,9 +10,8 @@ OUT_DIR = out
 TARGET = $(OUT_DIR)/app
 
 # ソースファイルとオブジェクトファイル
-SRCS = $(wildcard *.cpp)
-OBJS = $(SRCS:.cpp=.o)
-OBJS := $(patsubst %.o,$(OUT_DIR)/%.o,$(OBJS))
+SRCS = $(wildcard src/*.cpp)  # srcディレクトリからソースファイルを取得
+OBJS = $(SRCS:src/%.cpp=$(OUT_DIR)/%.o)  # 出力先もsrcディレクトリを考慮して修正
 
 # デフォルトターゲット
 all: run
@@ -24,10 +22,10 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 # .cppから.oを生成
-$(OUT_DIR)/%.o: %.cpp
+$(OUT_DIR)/%.o: src/%.cpp  # ソースファイルのパスをsrcに変更
 	@mkdir -p $(OUT_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-	
+
 build: $(TARGET)
 
 # 実行ターゲット
@@ -43,3 +41,4 @@ clean:
 debug:
 	@echo "SRCS: $(SRCS)"
 	@echo "OBJS: $(OBJS)"
+	@echo "HEADERS: $(wildcard src/*.h)"  # src内のヘッダファイルを表示

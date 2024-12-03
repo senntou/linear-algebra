@@ -97,10 +97,10 @@ int main() {
     x(i) = 100;
   }
 
+  // 射影勾配法
   // muの値を変えつつ実行
   const int max_iter = 1000;
   for (int i = 0; i < 10; i++) {
-    // 射影勾配法
     double mu = 0.01 * (double)(i + 1);
     x = projection_gradient_method(y, A, mu, max_iter);
     // 復元画像
