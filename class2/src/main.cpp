@@ -12,8 +12,9 @@
 
 #define OUTPUT_DIR "output/"
 
-#define N 28 // yの次元
-#define K 5  // hの次元
+#define N 28     // yの次元
+#define K 5      // hの次元
+#define INIT 200 // xの初期値
 const int M = N + K - 1;
 
 Eigen::Vector<double, N * N> cv2eigen(cv::Mat &img) {
@@ -50,12 +51,34 @@ projection_gradient_method(const Eigen::Vector<double, N * N> &y,
                            const int max_iter) {
   Eigen::Vector<double, M * M> x = Eigen::Vector<double, M * M>::Zero();
   for (int i = 0; i < M * M; i++) {
-    x(i) = 100;
+    x(i) = INIT;
   }
+
   for (int i = 0; i < max_iter; i++) {
     x -= mu * grad_f(y, A, x);
     for (int j = 0; j < M * M; j++) {
       x(j) = std::max(0.0, x(j));
+    }
+  }
+  return x;
+}
+
+double sign(double x) { return (x > 0) - (x < 0); }
+
+// 近接勾配法
+Eigen::Vector<double, M * M>
+proximal_gradient_method(const Eigen::Vector<double, N * N> &y,
+                         const Eigen::MatrixXd &A, const double lambda,
+                         const int max_iter) {
+  Eigen::Vector<double, M * M> x = Eigen::Vector<double, M * M>::Zero();
+  for (int i = 0; i < M * M; i++) {
+    x(i) = INIT;
+  }
+
+  for (int i = 0; i < max_iter; i++) {
+    x -= lambda * grad_f(y, A, x);
+    for (int j = 0; j < M * M; j++) {
+      x(j) = sign(x(j)) * std::max(0.0, std::abs(x(j)) - lambda);
     }
   }
   return x;
@@ -91,22 +114,27 @@ int main() {
     }
   }
 
-  // 初期値
-  Eigen::Vector<double, M * M> x = Eigen::Vector<double, M * M>::Zero();
-  for (int i = 0; i < M * M; i++) {
-    x(i) = 100;
-  }
-
   // 射影勾配法
   // muの値を変えつつ実行
   const int max_iter = 1000;
   for (int i = 0; i < 10; i++) {
     double mu = 0.01 * (double)(i + 1);
-    x = projection_gradient_method(y, A, mu, max_iter);
+    Eigen::Vector<double, M * M> x =
+        projection_gradient_method(y, A, mu, max_iter);
     // 復元画像
     cv::Mat output = eigen2cv(x);
-    cv::imwrite("output/output_" + std::to_string(i + 1) + ".png", output);
+    myImWrite("projection", output);
   }
 
+  // 近接勾配法
+  // muの値を変えつつ実行
+  for (int i = 0; i < 10; i++) {
+    double lambda = 0.01 * (double)(i + 1);
+    Eigen::Vector<double, M * M> x =
+        proximal_gradient_method(y, A, lambda, max_iter);
+    // 復元画像
+    cv::Mat output = eigen2cv(x);
+    myImWrite("proximal", output);
+  }
   return 0;
 }

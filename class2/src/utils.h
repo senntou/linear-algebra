@@ -1,6 +1,7 @@
 #pragma once
 #include <eigen3/Eigen/Dense>
 #include <iostream>
+#include <opencv2/highgui.hpp>
 
 template <typename T, int N>
 void print_vector(std::string title, const Eigen::Vector<T, N> &v) {
@@ -26,3 +27,5 @@ void vector_right_shift(Eigen::Vector<T, N> &v, int shift) {
   }
   v = tmp;
 }
+
+void myImWrite(std::string filename, const cv::Mat &img);

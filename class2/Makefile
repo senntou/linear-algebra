@@ -14,7 +14,7 @@ SRCS = $(wildcard src/*.cpp)  # srcディレクトリからソースファイル
 OBJS = $(SRCS:src/%.cpp=$(OUT_DIR)/%.o)  # 出力先もsrcディレクトリを考慮して修正
 
 # デフォルトターゲット
-all: run
+all: init run
 
 # 実行ファイルを生成
 $(TARGET): $(OBJS)
@@ -32,10 +32,15 @@ build: $(TARGET)
 run: $(TARGET)
 	@echo "Running $(TARGET)..."
 	./$(TARGET)
+	
+# outputディレクトリがなければ作成
+init:
+	mkdir -p output
 
 # クリーンアップ
 clean:
 	rm -rf $(OUT_DIR)
+	rm -rf output
 
 # ファイル一覧を表示するデバッグターゲット
 debug:
