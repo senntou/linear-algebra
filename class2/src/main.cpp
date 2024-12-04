@@ -12,26 +12,25 @@
 
 #define OUTPUT_DIR "output/"
 
-#define N 28     // yの次元
-#define K 5      // hの次元
-#define INIT 200 // xの初期値
-const int M = N + K - 1;
+#define M 28 // yの次元
+#define K 5  // hの次元
+const int N = M - K + 1;
 
-Eigen::Vector<double, N * N> cv2eigen(cv::Mat &img) {
-  Eigen::Vector<double, N * N> y;
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      y(i * N + j) = img.at<uchar>(i, j);
+Eigen::Vector<double, M * M> cv2eigen(cv::Mat &img) {
+  Eigen::Vector<double, M * M> x;
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < M; j++) {
+      x(i * M + j) = img.at<uchar>(i, j);
     }
   }
-  return y;
+  return x;
 }
 
 cv::Mat eigen2cv(const Eigen::Vector<double, M * M> &y) {
   cv::Mat img = cv::Mat::zeros(M, M, CV_8UC1);
   for (int i = 0; i < M; i++) {
     for (int j = 0; j < M; j++) {
-      img.at<uchar>(i, j) = y(i * M + j);
+      img.at<uchar>(i, j) = std::clamp(y(i * M + j), 0.0, 255.0);
     }
   }
   return img;
@@ -51,7 +50,7 @@ projection_gradient_method(const Eigen::Vector<double, N * N> &y,
                            const int max_iter) {
   Eigen::Vector<double, M * M> x = Eigen::Vector<double, M * M>::Zero();
   for (int i = 0; i < M * M; i++) {
-    x(i) = INIT;
+    x(i) = 10000;
   }
 
   for (int i = 0; i < max_iter; i++) {
@@ -68,15 +67,15 @@ double sign(double x) { return (x > 0) - (x < 0); }
 // 近接勾配法
 Eigen::Vector<double, M * M>
 proximal_gradient_method(const Eigen::Vector<double, N * N> &y,
-                         const Eigen::MatrixXd &A, const double lambda,
-                         const int max_iter) {
+                         const Eigen::MatrixXd &A, const double mu,
+                         const double lambda, const int max_iter) {
   Eigen::Vector<double, M * M> x = Eigen::Vector<double, M * M>::Zero();
   for (int i = 0; i < M * M; i++) {
-    x(i) = INIT;
+    x(i) = 0;
   }
 
   for (int i = 0; i < max_iter; i++) {
-    x -= lambda * grad_f(y, A, x);
+    x -= mu * grad_f(y, A, x);
     for (int j = 0; j < M * M; j++) {
       x(j) = sign(x(j)) * std::max(0.0, std::abs(x(j)) - lambda);
     }
@@ -91,7 +90,7 @@ int main() {
   std::cout << "img size: " << img.size() << std::endl;
 
   // Mat型からEigen::Vector型に変換 (1次元ベクトルへ)
-  Eigen::Vector<double, N * N> y = cv2eigen(img);
+  Eigen::Vector<double, M * M> x_base = cv2eigen(img);
 
   // フィルタ
   Eigen::Matrix<double, K, K> h = Eigen::Matrix<double, K, K>::Ones();
@@ -114,11 +113,13 @@ int main() {
     }
   }
 
+  Eigen::Vector<double, N * N> y = A * x_base;
+
   // 射影勾配法
   // muの値を変えつつ実行
   const int max_iter = 1000;
   for (int i = 0; i < 10; i++) {
-    double mu = 0.01 * (double)(i + 1);
+    double mu = 0.001 * (double)(i + 1);
     Eigen::Vector<double, M * M> x =
         projection_gradient_method(y, A, mu, max_iter);
     // 復元画像
@@ -129,9 +130,11 @@ int main() {
   // 近接勾配法
   // muの値を変えつつ実行
   for (int i = 0; i < 10; i++) {
-    double lambda = 0.01 * (double)(i + 1);
+    double mu = 0.001 * (double)(i + 1);
+    double lambda = 1;
     Eigen::Vector<double, M * M> x =
-        proximal_gradient_method(y, A, lambda, max_iter);
+        proximal_gradient_method(y, A, mu, lambda, max_iter);
+
     // 復元画像
     cv::Mat output = eigen2cv(x);
     myImWrite("proximal", output);
