@@ -8,12 +8,14 @@
 #include <eigen3/Eigen/src/Core/Matrix.h>
 #include <iostream>
 #include <opencv2/highgui.hpp>
+#include <random>
 #include <string>
 
 #define OUTPUT_DIR "output/"
 
-#define M 28 // yの次元
-#define K 5  // hの次元
+#define M 28      // yの次元
+#define K 5       // hの次元
+#define SIGMA 100 // ノイズの標準偏差
 const int N = M - K + 1;
 
 Eigen::Vector<double, M * M> cv2eigen(cv::Mat &img) {
@@ -113,7 +115,15 @@ int main() {
     }
   }
 
+  // 観測画像y
   Eigen::Vector<double, N * N> y = A * x_base;
+  // noise
+  std::random_device seed_gen;
+  std::default_random_engine engine(seed_gen());
+  std::normal_distribution<> dist(0.0, SIGMA);
+  for (int i = 0; i < N * N; i++) {
+    y(i) += dist(engine);
+  }
 
   // 射影勾配法
   // muの値を変えつつ実行
