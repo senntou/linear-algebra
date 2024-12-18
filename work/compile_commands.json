@@ -1,0 +1,42 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-I",
+      "/usr/include",
+      "-I",
+      "/usr/include/opencv4",
+      "-I",
+      "/usr/include/eigen3",
+      "-c",
+      "-o",
+      "out/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/saibo/workspace/la/work",
+    "file": "/home/saibo/workspace/la/work/src/main.cpp",
+    "output": "/home/saibo/workspace/la/work/out/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O2",
+      "-I",
+      "/usr/include",
+      "-I",
+      "/usr/include/opencv4",
+      "-I",
+      "/usr/include/eigen3",
+      "-c",
+      "-o",
+      "out/utils.o",
+      "src/utils.cpp"
+    ],
+    "directory": "/home/saibo/workspace/la/work",
+    "file": "/home/saibo/workspace/la/work/src/utils.cpp",
+    "output": "/home/saibo/workspace/la/work/out/utils.o"
+  }
+]
