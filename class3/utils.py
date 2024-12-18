@@ -49,7 +49,7 @@ def show_heatmaps(x_list, title="", save=False):
     fig = plt.figure(figsize=(8, 8))
     for i, x in enumerate(x_list):
         ax = fig.add_subplot(2, 2, i + 1)
-        ax.imshow(x, cmap="bone")
+        ax.imshow(x, cmap="gray")
         ax.set_title(f"{title} {i + 1}")
 
     if save:

@@ -24,7 +24,9 @@ if __name__ == "__main__":
 
     # 分散共分散行列
     s = np.zeros((DIM**2, DIM**2))
+    x_mean = np.mean(x_pnt, axis=0)
     for x in x_pnt:
+        x -= np.mean(x_mean)
         temp = x.reshape(-1, 1) @ x.reshape(1, -1)
         s += temp
     s /= DIM**2
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     # (2) x_baseを3次元に射影
     X = np.array(x_base).T  # xベクトルが横に並んだ行列
     Y = v[:, :3].T @ X  # 3次元に射影
-    plot_3d(Y[0], Y[1], Y[2], "y", save=True)  # 3次元に射影したデータを表示
+    plot_3d(Y[0], Y[1], Y[2], "y", save=False)  # 3次元に射影したデータを表示
 
     ############################################################
 
@@ -73,4 +75,4 @@ if __name__ == "__main__":
     print(f"res_i: {res_i + 1}, res_lmd: {res_lmd}")
     y_res = v.T @ X[:, res_i] * (1 - res_lmd) + v.T @ X[:, res_i + 1] * res_lmd
     x_res = v @ y_res
-    show_heatmap(unflatten(x_res), "reconstruction")
+    show_heatmap(unflatten(x_res), "reconstruction", save=True)
