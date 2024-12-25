@@ -74,3 +74,45 @@ pair<VectorXd, MatrixXd> deserialize_eigenvals(string str) {
 
   return make_pair(eigvals, eigvecs);
 }
+
+// matrixのシリアライズ
+string serialize_matrix(MatrixXd input) {
+  int rows = input.rows();
+  int cols = input.cols();
+  string str = to_string(rows) + "," + to_string(cols) + ",";
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      str += to_string_accurate(input(i, j)) + ",";
+    }
+  }
+  return str;
+}
+
+// matrixのデシリアライズ
+MatrixXd deserialize_matrix(string str) {
+  vector<double> values;
+  string value = "";
+  for (int i = 0; i < str.size(); i++) {
+    if (str[i] == ',') {
+      values.push_back(stod(value));
+      value = "";
+    } else {
+      value += str[i];
+    }
+  }
+
+  int rows = round(values[0]);
+  int cols = round(values[1]);
+
+  assert("serialize.cpp:128" && values.size() == 2 + rows * cols);
+  MatrixXd matrix = MatrixXd::Zero(rows, cols);
+  int index = 2;
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      matrix(i, j) = values[index];
+      index++;
+    }
+  }
+
+  return matrix;
+}

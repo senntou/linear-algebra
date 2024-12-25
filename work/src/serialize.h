@@ -14,3 +14,9 @@ string serialize_eigenvals(pair<VectorXd, MatrixXd> output);
 
 // 固有値・固有ベクトルのデシリアライズ
 pair<VectorXd, MatrixXd> deserialize_eigenvals(string str);
+
+// matrixのシリアライズ
+string serialize_matrix(MatrixXd input);
+
+// matrixのデシリアライズ
+MatrixXd deserialize_matrix(string str);

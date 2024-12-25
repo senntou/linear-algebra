@@ -3,8 +3,8 @@
 #include <opencv2/highgui.hpp>
 
 const int DIM = 32;
-const int N = 10; // rのstep数
-const int M = 10; // thetaのstep数
+const int N = 100; // rのstep数
+const int M = 100; // thetaのstep数
 
 #define OUTPUT_DIR "output/"
 
@@ -28,4 +28,8 @@ void show_heatmap(const Eigen::VectorXd &data, std::string filename,
 
 // 固有値、固有ベクトルを計算
 void eigensolve_cached(const Eigen::MatrixXd &sigma, Eigen::VectorXd &eigvals,
-                       Eigen::MatrixXd &eigvecs, std::string cache_id);
+                       Eigen::MatrixXd &eigvecs);
+
+// 分散共分散行列を計算
+Eigen::MatrixXd
+calc_covariance_cached(const std::vector<std::vector<Eigen::VectorXd>> &data);

@@ -81,7 +81,8 @@ void show_heatmap(const Eigen::VectorXd &data_input, std::string filename,
 
 // 固有値の計算
 void eigensolve_cached(const Eigen::MatrixXd &input, Eigen::VectorXd &eigvals,
-                       Eigen::MatrixXd &eigvecs, std::string cache_id) {
+                       Eigen::MatrixXd &eigvecs) {
+  static const string cache_id = "eigensolve";
 
   // keyの生成
   string key = generate_key_by_Matrix(input);
@@ -126,4 +127,46 @@ void eigensolve_cached(const Eigen::MatrixXd &input, Eigen::VectorXd &eigvals,
   eigvecs = eigvecs_sorted;
 
   return;
+}
+
+// 分散共分散行列を計算
+MatrixXd
+calc_covariance_cached(const std::vector<std::vector<Eigen::VectorXd>> &data) {
+  static const string cache_id = "calc_covariance";
+
+  string input_key = to_string(N) + "_" + to_string(M);
+
+  string values = get_cache(cache_id, input_key);
+
+  if (values != "") {
+    cout << "[CACHE HIT] " << cache_id << endl;
+    return deserialize_matrix(values);
+  }
+
+  cout << "[CACHE MISS] " << cache_id << endl;
+
+  // 平均ベクトル
+  MatrixXd x_mean = VectorXd::Zero(DIM * DIM);
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < M; j++) {
+      x_mean += data[i][j];
+    }
+  }
+  x_mean /= N * M;
+
+  // 分散共分散行列
+  MatrixXd sigma = MatrixXd::Zero(DIM * DIM, DIM * DIM);
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < M; j++) {
+      VectorXd x_norm = data[i][j] - x_mean;
+      sigma += data[i][j] * data[i][j].transpose();
+    }
+  }
+  sigma /= N * M;
+
+  // キャッシュに保存
+  string serialized = serialize_matrix(sigma);
+  save_cache(cache_id, input_key, serialized);
+
+  return sigma;
 }

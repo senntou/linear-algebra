@@ -16,30 +16,14 @@ int main() {
   // 画像の読み込み
   vector data = get_input_data();
 
-  // 平均ベクトル
-  MatrixXd x_mean = VectorXd::Zero(DIM * DIM);
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < M; j++) {
-      x_mean += data[i][j];
-    }
-  }
-  x_mean /= N * M;
+  MatrixXd sigma = calc_covariance_cached(data);
 
-  // 分散共分散行列
-  MatrixXd sigma = MatrixXd::Zero(DIM * DIM, DIM * DIM);
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < M; j++) {
-      VectorXd x_norm = data[i][j] - x_mean;
-      sigma += data[i][j] * data[i][j].transpose();
-    }
-  }
-  sigma /= N * M;
   show_heatmap(sigma, "covariance");
 
   // 固有値、固有ベクトル
   VectorXd eigvals;
   MatrixXd eigvecs;
-  eigensolve_cached(sigma, eigvals, eigvecs, "eigensolve");
+  eigensolve_cached(sigma, eigvals, eigvecs);
 
   // 固有ベクトルの表示
   for (int i = 0; i < 8; i++) {
