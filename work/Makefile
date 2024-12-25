@@ -8,6 +8,7 @@ CXXFLAGS += -I /workspaces/libs/sqlite_modern_cpp/hdr
 
 LIBS = `pkg-config --cflags --libs opencv4`
 LIBS += -lsqlite3
+GOLD = -fuse-ld=gold
 
 # ターゲット実行ファイル名と出力ディレクトリ
 OUT_DIR = out
@@ -19,7 +20,7 @@ OBJS = $(SRCS:src/%.cpp=$(OUT_DIR)/%.o)  # 出力先もsrcディレクトリを�
 
 # デフォルトターゲット
 all: 
-	make start -j4
+	make start -j6
 	
 start: init run
 	
@@ -27,7 +28,7 @@ start: init run
 $(TARGET): $(OBJS)
 	@mkdir -p $(OUT_DIR)
 	@echo "Linking $@..."
-	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS) 
+	@$(CXX) $(CXXFLAGS) $(GOLD) -o $@ $^ $(LIBS) 
 
 # .cppから.oを生成
 $(OUT_DIR)/%.o: src/%.cpp  # ソースファイルのパスをsrcに変更

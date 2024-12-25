@@ -1,5 +1,5 @@
+#include "calc.h"
 #include "input.h"
-#include "sqlite.h"
 #include "utils.h"
 #include <cmath>
 #include <cstdio>
