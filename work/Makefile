@@ -2,8 +2,12 @@
 CXX = g++
 
 # コンパイルフラグ
-CXXFLAGS = -std=c++17 -O2 -I /usr/include -I /usr/include/opencv4 -I /usr/include/eigen3 
+CXXFLAGS = -std=c++17 -O2 -I /usr/include
+CXXFLAGS += -I /usr/include/opencv4 -I /usr/include/eigen3 
+CXXFLAGS += -I /workspaces/libs/sqlite_modern_cpp/hdr
+
 LIBS = `pkg-config --cflags --libs opencv4`
+LIBS += -lsqlite3
 
 # ターゲット実行ファイル名と出力ディレクトリ
 OUT_DIR = out

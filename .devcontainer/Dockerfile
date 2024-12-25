@@ -12,7 +12,10 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
     
 # install clangd
 RUN apt-get update && apt-get install -y clangd libopencv-dev libeigen3-dev python3-numpy \
-    python3-matplotlib python3-pip bear
+    python3-matplotlib python3-pip bear libsqlite3-dev
+    
+# install sqlite_modern_cpp
+RUN git clone https://github.com/SqliteModernCpp/sqlite_modern_cpp /workspaces/libs/sqlite_modern_cpp
     
 
 # [Optional] Uncomment this section to install additional vcpkg ports.

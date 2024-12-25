@@ -3,8 +3,8 @@
 #include <opencv2/highgui.hpp>
 
 const int DIM = 32;
-const int N = 100; // rのstep数
-const int M = 100; // thetaのstep数
+const int N = 10; // rのstep数
+const int M = 10; // thetaのstep数
 
 #define OUTPUT_DIR "output/"
 
