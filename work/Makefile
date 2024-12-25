@@ -18,8 +18,11 @@ SRCS = $(wildcard src/*.cpp)  # srcディレクトリからソースファイル
 OBJS = $(SRCS:src/%.cpp=$(OUT_DIR)/%.o)  # 出力先もsrcディレクトリを考慮して修正
 
 # デフォルトターゲット
-all: init run
-
+all: 
+	make start -j4
+	
+start: init run
+	
 # 実行ファイルを生成
 $(TARGET): $(OBJS)
 	@mkdir -p $(OUT_DIR)
