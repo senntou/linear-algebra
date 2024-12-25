@@ -10,16 +10,14 @@
       "/usr/include/opencv4",
       "-I",
       "/usr/include/eigen3",
-      "-I",
-      "/usr/include/python3.12",
       "-c",
       "-o",
       "out/cache.o",
       "src/cache.cpp"
     ],
-    "directory": "/home/saibo/workspace/la/work",
-    "file": "/home/saibo/workspace/la/work/src/cache.cpp",
-    "output": "/home/saibo/workspace/la/work/out/cache.o"
+    "directory": "/workspaces/la/work",
+    "file": "/workspaces/la/work/src/cache.cpp",
+    "output": "/workspaces/la/work/out/cache.o"
   },
   {
     "arguments": [
@@ -32,16 +30,14 @@
       "/usr/include/opencv4",
       "-I",
       "/usr/include/eigen3",
-      "-I",
-      "/usr/include/python3.12",
       "-c",
       "-o",
       "out/input.o",
       "src/input.cpp"
     ],
-    "directory": "/home/saibo/workspace/la/work",
-    "file": "/home/saibo/workspace/la/work/src/input.cpp",
-    "output": "/home/saibo/workspace/la/work/out/input.o"
+    "directory": "/workspaces/la/work",
+    "file": "/workspaces/la/work/src/input.cpp",
+    "output": "/workspaces/la/work/out/input.o"
   },
   {
     "arguments": [
@@ -54,16 +50,14 @@
       "/usr/include/opencv4",
       "-I",
       "/usr/include/eigen3",
-      "-I",
-      "/usr/include/python3.12",
       "-c",
       "-o",
       "out/main.o",
       "src/main.cpp"
     ],
-    "directory": "/home/saibo/workspace/la/work",
-    "file": "/home/saibo/workspace/la/work/src/main.cpp",
-    "output": "/home/saibo/workspace/la/work/out/main.o"
+    "directory": "/workspaces/la/work",
+    "file": "/workspaces/la/work/src/main.cpp",
+    "output": "/workspaces/la/work/out/main.o"
   },
   {
     "arguments": [
@@ -76,15 +70,13 @@
       "/usr/include/opencv4",
       "-I",
       "/usr/include/eigen3",
-      "-I",
-      "/usr/include/python3.12",
       "-c",
       "-o",
       "out/utils.o",
       "src/utils.cpp"
     ],
-    "directory": "/home/saibo/workspace/la/work",
-    "file": "/home/saibo/workspace/la/work/src/utils.cpp",
-    "output": "/home/saibo/workspace/la/work/out/utils.o"
+    "directory": "/workspaces/la/work",
+    "file": "/workspaces/la/work/src/utils.cpp",
+    "output": "/workspaces/la/work/out/utils.o"
   }
 ]
