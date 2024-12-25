@@ -2,8 +2,8 @@
 CXX = g++
 
 # コンパイルフラグ
-CXXFLAGS = -std=c++17 -O2 -I /usr/include -I /usr/include/opencv4 -I /usr/include/eigen3 -I /usr/include/python3.12 
-LIBS = `pkg-config --cflags --libs opencv4` -lpython3.12
+CXXFLAGS = -std=c++17 -O2 -I /usr/include -I /usr/include/opencv4 -I /usr/include/eigen3 
+LIBS = `pkg-config --cflags --libs opencv4`
 
 # ターゲット実行ファイル名と出力ディレクトリ
 OUT_DIR = out
@@ -39,12 +39,15 @@ run: $(TARGET)
 init:
 	mkdir -p output
 	mkdir -p cache
+	mkdir -p pydata
 
 # クリーンアップ
 clean:
 	rm -rf $(OUT_DIR)
 	rm -rf output
+	rm -rf pydata
 	
+# キャッシュのクリーンアップ
 cache_clean:
 	rm -rf cache
 
@@ -55,7 +58,11 @@ debug:
 	@echo "HEADERS: $(wildcard src/*.h)"  # src内のヘッダファイルを表示
 
 # bear でコンパイルコマンドを生成
+# VSCodeの静的解析のために必要
 compile_commands: 
 	make clean
 	@echo ""
 	bear -- make
+
+plot:
+	python3 python/main.py

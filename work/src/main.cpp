@@ -1,10 +1,10 @@
-#define WITHOUT_NUMPY 1
-#include "../../../matplotlibcpp.h"
 #include "input.h"
 #include "utils.h"
+#include <cmath>
 #include <cstdio>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/src/Core/Matrix.h>
+#include <iostream>
 #include <opencv2/core/eigen.hpp>
 
 using namespace std;
@@ -47,37 +47,30 @@ int main() {
   }
 
   // 潜在空間への射影
-  const int DIM_L = 2; // 潜在空間の次元
+  const int DIM_L = 3; // 潜在空間の次元
   MatrixXd v = eigvecs.block(0, 0, DIM * DIM, DIM_L);
   vector y(N, vector<VectorXd>(M));
   MatrixXd y0 = MatrixXd::Zero(N, M);
   MatrixXd y1 = MatrixXd::Zero(N, M);
+  MatrixXd y2 = MatrixXd::Zero(N, M);
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < M; j++) {
       y[i][j] = v.transpose() * data[i][j];
       y0(i, j) = y[i][j](0);
       y1(i, j) = y[i][j](1);
+      y2(i, j) = y[i][j](2);
     }
   }
 
-  show_heatmap(y0, "latent", false);
-  show_heatmap(y1, "latent", false);
-
-  // 多様体の可視化
-  vector<double> y0_vec, y1_vec;
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < M; j++) {
-      y0_vec.push_back(y0(i, j));
-      y1_vec.push_back(y1(i, j));
-    }
-  }
-  matplotlibcpp::scatter(y0_vec, y1_vec);
-  matplotlibcpp::show();
+  save_matrix_to_csv("y0", y0);
+  save_matrix_to_csv("y1", y1);
+  save_matrix_to_csv("y2", y2);
 
   // 観測データからの復元
   Mat x_cvmat = get_rotation_matrix(1.3, M_PI / 8.);
   MatrixXd x_eigmat = MatrixXd::Zero(DIM, DIM);
   cv2eigen(x_cvmat, x_eigmat);
+
   VectorXd x_input = Map<VectorXd>(x_eigmat.data(), x_eigmat.size());
   add_noise(x_input, 50);
 
@@ -85,4 +78,29 @@ int main() {
 
   // 潜在空間への射影
   VectorXd y_input = v.transpose() * x_input;
+
+  // r, thetaの推定
+  double r_input = 0;
+  double theta_input = 0;
+  double min_dist = 1e9;
+  // y の中から、最もy_input に近いものを探す
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < M; j++) {
+      double dist = (y_input - y[i][j]).norm();
+      if (dist < min_dist) {
+        min_dist = dist;
+        r_input = get_r_theta(i, j).first;
+        theta_input = get_r_theta(i, j).second;
+      }
+    }
+  }
+
+  cout << "r_input: " << r_input << endl;
+  cout << "theta_input: " << theta_input / M_PI << "pi" << endl;
+
+  // 復元画像の表示
+  Mat x_reconstructed = get_rotation_matrix(r_input, theta_input);
+  MatrixXd x_reconstructed_eigmat;
+  cv2eigen(x_reconstructed, x_reconstructed_eigmat);
+  show_heatmap(x_reconstructed_eigmat, "reconstructed", false);
 }

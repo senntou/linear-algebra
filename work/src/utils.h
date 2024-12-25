@@ -14,6 +14,10 @@ cv::Mat get_rotation_matrix(double r, double theta);
 // 画像の保存
 void myImWrite(std::string filename, const cv::Mat &img);
 
+// matrixをCSVに保存
+void save_matrix_to_csv(const std::string &filename,
+                        const Eigen::MatrixXd &matrix);
+
 // ヒートマップの表示
 // max_255=trueの場合、そのままの値で表示される
 // max_255=falseの場合、最大値が255になるように正規化される

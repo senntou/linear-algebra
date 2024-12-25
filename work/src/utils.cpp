@@ -18,6 +18,28 @@ void myImWrite(std::string filename, const cv::Mat &img) {
   cv::imwrite(output_dir, img);
 }
 
+// matrixをCSVに保存
+void save_matrix_to_csv(const std::string &filename,
+                        const Eigen::MatrixXd &matrix) {
+  std::ofstream file("pydata/" + filename + ".csv");
+  if (!file.is_open()) {
+    std::cerr << "[ERROR] cannot open file" << std::endl;
+    return;
+  }
+
+  for (int i = 0; i < matrix.rows(); ++i) {
+    for (int j = 0; j < matrix.cols(); ++j) {
+      file << matrix(i, j);
+      if (j < matrix.cols() - 1) {
+        file << ","; // カンマで区切る
+      }
+    }
+    file << "\n"; // 行の終わりで改行
+  }
+
+  file.close();
+}
+
 // ヒートマップの表示
 void show_heatmap(const Eigen::MatrixXd &data_input, std::string filename,
                   bool max_255) {

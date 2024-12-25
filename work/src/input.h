@@ -10,6 +10,9 @@ using namespace std;
 using namespace cv;
 using namespace Eigen;
 
+// i, j番目のr, thetaを取得
+pair<double, double> get_r_theta(int i, int j);
+
 // 回転した直線の画像を生成
 Mat get_rotation_matrix(double r, double theta);
 
