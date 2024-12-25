@@ -1,5 +1,4 @@
 #pragma once
-#include "sqlite.h"
 #include <Eigen/Dense>
 #include <string>
 

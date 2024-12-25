@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "Eigen/src/Core/Matrix.h"
 #include "serialize.h"
+#include "sqlite.h"
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -73,7 +74,7 @@ void show_heatmap(const Eigen::VectorXd &data_input, std::string filename,
   cv::Mat img(DIM, DIM, CV_64F);
   for (int i = 0; i < DIM; i++) {
     for (int j = 0; j < DIM; j++) {
-      img.at<double>(i, j) = data(i * DIM + j);
+      img.at<double>(i, j) = data(j * DIM + i);
     }
   }
   myImWrite(filename, img);
