@@ -1,13 +1,15 @@
 #include "utils.h"
 #include "Eigen/src/Core/Matrix.h"
-#include "cache.h"
-#include <algorithm>
+#include "serialize.h"
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
 #include <sys/stat.h>
+
+using namespace std;
+using namespace Eigen;
 
 // 画像の保存
 void myImWrite(std::string filename, const cv::Mat &img) {
@@ -80,50 +82,48 @@ void show_heatmap(const Eigen::VectorXd &data_input, std::string filename,
 // 固有値の計算
 void eigensolve_cached(const Eigen::MatrixXd &input, Eigen::VectorXd &eigvals,
                        Eigen::MatrixXd &eigvecs, std::string cache_id) {
-  // input sum を確認
-  std::string input_sum_dir = "cache/" + cache_id + "_input_sum.txt";
-  std::ifstream ifs(input_sum_dir);
 
-  // cacheがある場合
-  if (ifs.is_open()) {
-    std::string input_sum;
-    ifs >> input_sum;
-    double input_sum_double = std::stod(input_sum);
-    // input sum が同じ場合、入力データが同じとみなしてcacheを読み込む
-    if (abs(input.sum() - input_sum_double) < 1e-6) {
-      std::cout << "[CACHE HIT] cache hit: " << cache_id << std::endl;
-      load_vector_cache(eigvals, cache_id + "_eigvals");
-      load_matrix_cache(eigvecs, cache_id + "_eigvecs");
-      return;
-    }
+  // keyの生成
+  string key = generate_key_by_Matrix(input);
+
+  // キャッシュがあればそれを返す
+  string values = get_cache(cache_id, key);
+  if (values != "") {
+    cout << "[CACHE HIT] eigensolve" << endl;
+    pair<VectorXd, MatrixXd> output = deserialize_eigenvals(values);
+    eigvals = output.first;
+    eigvecs = output.second;
+    return;
   }
 
-  std::cout << "[CACHE MISS] cache miss: " << cache_id << std::endl;
+  cout << "[CACHE MISS] eigensolve" << endl;
 
-  // input sumをcacheに書き込み
-  char buffer[50];
-  sprintf(buffer, "%.12f", input.sum());
-  std::ofstream ofs(input_sum_dir);
-  ofs << buffer << std::endl;
+  EigenSolver<MatrixXd> es(input);
+  VectorXd eigvals_tmp = es.eigenvalues().real();
+  MatrixXd eigvecs_tmp = es.eigenvectors().real();
 
-  // cacheがない場合、固有値、固有ベクトルを計算
-  Eigen::EigenSolver<Eigen::MatrixXd> es(input);
-  eigvals = es.eigenvalues().real();
-  eigvecs = es.eigenvectors().real();
-
-  // 固有値の大きい順に並び替え
-  std::vector<std::pair<double, Eigen::VectorXd>> eig;
-  for (int i = 0; i < DIM * DIM; i++) {
-    eig.push_back({eigvals(i), eigvecs.col(i)});
+  // 固有値のソート
+  vector<pair<double, int>> eigvals_index;
+  for (int i = 0; i < eigvals_tmp.size(); i++) {
+    eigvals_index.push_back(make_pair(eigvals_tmp(i), i));
   }
-  std::sort(eig.begin(), eig.end(),
-            ([](auto &lhs, auto &rhs) { return lhs.first > rhs.first; }));
-  for (int i = 0; i < 8; i++) {
-    eigvals(i) = eig[i].first;
-    eigvecs.col(i) = eig[i].second;
+  sort(eigvals_index.begin(), eigvals_index.end(),
+       greater<pair<double, int>>());
+  VectorXd eigvals_sorted = VectorXd::Zero(eigvals_tmp.size());
+  MatrixXd eigvecs_sorted =
+      MatrixXd::Zero(eigvecs_tmp.rows(), eigvecs_tmp.cols());
+  for (int i = 0; i < eigvals_tmp.size(); i++) {
+    eigvals_sorted(i) = eigvals_tmp(eigvals_index[i].second);
+    eigvecs_sorted.col(i) = eigvecs_tmp.col(eigvals_index[i].second);
   }
 
-  // cacheに書き込み
-  save_vector_cache(eigvals, cache_id + "_eigvals");
-  save_matrix_cache(eigvecs, cache_id + "_eigvecs");
+  // キャッシュに保存
+  string serialized =
+      serialize_eigenvals(make_pair(eigvals_sorted, eigvecs_sorted));
+  save_cache(cache_id, key, serialized);
+
+  eigvals = eigvals_sorted;
+  eigvecs = eigvecs_sorted;
+
+  return;
 }
