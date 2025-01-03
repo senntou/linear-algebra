@@ -73,4 +73,4 @@ compile_commands:
 	bear -- make
 
 plot:
-	python3 python/main.py
+	python3 python/plot.py
