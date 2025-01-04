@@ -4,7 +4,8 @@ CXX = g++
 # コンパイルフラグ
 CXXFLAGS = -std=c++17 -O2 -I /usr/include
 CXXFLAGS += -I /usr/include/opencv4 -I /usr/include/eigen3 
-CXXFLAGS += -I /workspaces/libs/sqlite_modern_cpp/hdr
+# CXXFLAGS += -I /workspaces/libs/sqlite_modern_cpp/hdr
+CXXFLAGS += -I ./libs/sqlite_modern_cpp/hdr
 
 LIBS = `pkg-config --cflags --libs opencv4`
 LIBS += -lsqlite3

@@ -12,6 +12,7 @@ using namespace std;
 using namespace cv;
 using namespace Eigen;
 
+// 画像は32x32のグレースケール画像
 int main() {
   // 画像の読み込み
   vector data = get_input_data();
