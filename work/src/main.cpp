@@ -19,7 +19,7 @@ int main() {
 
   MatrixXd sigma = calc_covariance_cached(data);
 
-  show_heatmap(sigma, "covariance");
+  show_heatmap(sigma, "covariance", false);
 
   // 固有値、固有ベクトル
   VectorXd eigvals;
