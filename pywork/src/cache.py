@@ -31,11 +31,10 @@ def sqlite_cache(db_path="cache.db"):
             cursor.execute("SELECT value FROM cache WHERE key = ?", (key,))
             row = cursor.fetchone()
             if row:
-                print("Cache hit!")
                 return pickle.loads(row[0])
 
             # 関数を実行して結果を保存
-            print("Cache miss!")
+            print("[CACHE MISS] " + db_path)
             result = func(*args, **kwargs)
             cursor.execute(
                 "INSERT OR REPLACE INTO cache (key, value) VALUES (?, ?)",
