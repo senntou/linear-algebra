@@ -1,4 +1,4 @@
-*.karas
+model
 cache
 __pycache__
 output

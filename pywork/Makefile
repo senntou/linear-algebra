@@ -15,3 +15,6 @@ model-clean:
 	
 cache-clean:
 	rm -rf cache
+
+line:
+	python src/line_prediction.py

@@ -34,3 +34,18 @@ def get_input_images(N, M):
             img = img.reshape(DIM * DIM)
             data.append(img)
     return np.array(data).T
+
+
+def get_input_images_params(N, M):
+    r_min = 0
+    r_max = DIM / 2
+    theta_min = 0
+    theta_max = np.pi * 2
+    params = []
+    for i in range(N):
+        for j in range(M):
+            r = r_min + (r_max - r_min) * i / N
+            theta = theta_min + (theta_max - theta_min) * j / M
+            params.append(np.array([r, theta]))
+    params = np.array(params)
+    return params.T
