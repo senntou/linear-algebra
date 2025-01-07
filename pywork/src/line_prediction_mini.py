@@ -6,13 +6,15 @@ from const import DIM
 from input import get_input_images
 from input import get_input_images_params
 from input import get_rotation_matrix
+from calc import get_covariance_matrix, get_eigen
 
 
-NUM = 10000
 MODEL_DIR = "model"
-MODEL_NAME = MODEL_DIR + "/" + "line_prediction_large.keras"
+MODEL_NAME = MODEL_DIR + "/" + "line_prediction_mini.keras"
 
 NOISE_STD = 30
+
+DIM_L = 3
 
 
 def save_model(model):  # モデルを保存
@@ -29,14 +31,21 @@ def load_model():  # モデルを取得
 def init_model():  # モデルの初期化・構築
     model = tf.keras.models.Sequential(
         [
-            tf.keras.layers.Input(shape=(DIM * DIM,)),
+            tf.keras.layers.Input(shape=(DIM_L,)),
 
-            tf.keras.layers.Dense(
-                64, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
-            tf.keras.layers.Dense(
-                32, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
-            tf.keras.layers.Dense(
-                16, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+
+            # tf.keras.layers.Dense(
+            #     16, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
+            # tf.keras.layers.Dense(
+            #     32, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
+            # tf.keras.layers.Dense(
+            #     16, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
 
             tf.keras.layers.Dense(2)
         ]
@@ -67,9 +76,20 @@ def predict_model(x_test):  # モデルを用いた予測
     return model.predict(x_test)
 
 
+def project_to_latent_space(x):  # 潜在空間への射影
+    x = x.T
+    data = get_input_images(100, 100)
+    cov = get_covariance_matrix(data)
+    eigvals, eigvecs = get_eigen(cov)
+    v = eigvecs[:, :DIM_L]
+    y = v.T @ x
+    return y.T
+
+
 def generate_data(n, m, times=1):  # データの生成
 
     x_base = get_input_images(n, m).T
+    x_base = project_to_latent_space(x_base)
     y_base = get_input_images_params(n, m).T
 
     x = None
@@ -77,7 +97,6 @@ def generate_data(n, m, times=1):  # データの生成
 
     for _ in range(times):
         x_temp = x_base + np.random.normal(0, NOISE_STD, x_base.shape)
-        x_temp = np.clip(x_temp, 0, 255)
 
         if x is None:
             x = x_temp
@@ -90,24 +109,25 @@ def generate_data(n, m, times=1):  # データの生成
     return x, y
 
 
-def generate_random_data(NUM):  # ランダムなデータを生成
+def generate_random_data(num, latent=True):  # ランダムなデータを生成
     r_min = 0
     r_max = DIM / 2
     theta_min = 0
     theta_max = np.pi * 2
 
-    data = np.zeros((NUM, DIM * DIM))
-    params = np.zeros((2, NUM))
-    params[0] = np.random.uniform(r_min, r_max, NUM)
-    params[1] = np.random.uniform(theta_min, theta_max, NUM)
+    data = np.zeros((num, DIM * DIM))
+    params = np.zeros((2, num))
+    params[0] = np.random.uniform(r_min, r_max, num)
+    params[1] = np.random.uniform(theta_min, theta_max, num)
 
-    for i in range(NUM):
+    for i in range(num):
         img = get_rotation_matrix(params[0, i], params[1, i])
         img = img.reshape(DIM * DIM)
         data[i] = img
 
-    noise = np.random.normal(0, NOISE_STD, data.shape)
-    data = np.array(data) + noise
+    if latent:
+        data = project_to_latent_space(data)
+    data += np.random.normal(0, NOISE_STD, data.shape)
 
     return data, params.T
 
@@ -121,9 +141,10 @@ def main_printer(func):
 
 
 def test_prediction():
-    x_test, y_test = generate_random_data(1)
+    x_test, y_test = generate_random_data(1, latent=False)
+    x_test_latent = project_to_latent_space(x_test)
     y_test = y_test[0]
-    y_pred = predict_model(x_test)[0]
+    y_pred = predict_model(x_test_latent)[0]
 
     img_pred = get_rotation_matrix(y_pred[0], y_pred[1])
 
@@ -142,14 +163,14 @@ def test_prediction():
 if __name__ == '__main__':
 
     # train
-    init_model()
-    x_train, y_train = generate_data(100, 100, 5)
-    model = train_model(x_train, y_train, epochs=100)
+    # init_model()
+    # x_train, y_train = generate_data(100, 100)
+    # model = train_model(x_train, y_train, epochs=1000)
 
     # evaluate
-    x_eval, y_eval = generate_random_data(1000)
-    model = load_model()
-    model.evaluate(x_eval, y_eval)
+    # x_eval, y_eval = generate_random_data(1000)
+    # model = load_model()
+    # model.evaluate(x_eval, y_eval)
 
     # test
     test_prediction()

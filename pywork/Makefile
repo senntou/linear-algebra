@@ -17,4 +17,4 @@ cache-clean:
 	rm -rf cache
 
 line:
-	python src/line_prediction.py
+	python src/line_prediction_mini.py
