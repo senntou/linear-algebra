@@ -108,6 +108,7 @@ def generate_random_data(NUM):  # ランダムなデータを生成
 
     noise = np.random.normal(0, NOISE_STD, data.shape)
     data = np.array(data) + noise
+    data = np.clip(data, 0, 255)
 
     return data, params.T
 
@@ -142,9 +143,9 @@ def test_prediction():
 if __name__ == '__main__':
 
     # train
-    init_model()
-    x_train, y_train = generate_data(100, 100, 5)
-    model = train_model(x_train, y_train, epochs=100)
+    # init_model()
+    # x_train, y_train = generate_data(100, 100, 5)
+    # model = train_model(x_train, y_train, epochs=100)
 
     # evaluate
     x_eval, y_eval = generate_random_data(1000)
