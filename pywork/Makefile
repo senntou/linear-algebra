@@ -1,11 +1,11 @@
 
-all: clean run
+all: run
 
 run-temp:
 	python temp.py
 
 run:
-	python src/main.py
+	python src/main2.py
 	
 clean:
 	rm -rf output
