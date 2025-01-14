@@ -1,6 +1,6 @@
 import numpy as np
 from cache import sqlite_cache
-from const import DIM, BOLD
+from const import DIM, BOLD, R_MAX, R_MIN, THETA_MAX, THETA_MIN
 
 
 def clamp(x, mn, mx):
@@ -21,15 +21,11 @@ def get_rotation_matrix(r, theta):  # r, thetaの値から画像を生成
 
 @sqlite_cache("input.db")
 def get_input_images(N, M):
-    r_min = 0
-    r_max = DIM / 2
-    theta_min = 0
-    theta_max = np.pi * 2
     data = []
     for i in range(N):
         for j in range(M):
-            r = r_min + (r_max - r_min) * i / N
-            theta = theta_min + (theta_max - theta_min) * j / M
+            r = R_MIN + (R_MAX - R_MIN) * i / N
+            theta = THETA_MIN + (THETA_MAX - THETA_MIN) * j / M
             img = get_rotation_matrix(r, theta)
             img = img.reshape(DIM * DIM)
             data.append(img)
@@ -37,15 +33,11 @@ def get_input_images(N, M):
 
 
 def get_input_images_params(N, M):
-    r_min = 0
-    r_max = DIM / 2
-    theta_min = 0
-    theta_max = np.pi * 2
     params = []
     for i in range(N):
         for j in range(M):
-            r = r_min + (r_max - r_min) * i / N
-            theta = theta_min + (theta_max - theta_min) * j / M
+            r = R_MIN + (R_MAX - R_MIN) * i / N
+            theta = THETA_MIN + (THETA_MAX - THETA_MIN) * j / M
             params.append(np.array([r, theta]))
     params = np.array(params)
     return params.T
