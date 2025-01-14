@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from const import DIM, N, M, BOLD
 from input import get_input_images, get_rotation_matrix
-from calc import get_covariance_matrix, get_eigen
+from calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
 
 
 def plot_manifold(y_data):
@@ -25,13 +25,9 @@ if __name__ == '__main__':
     print("画像の読み込み")
     data = get_input_images(N, M)  # 各列が画像のベクトル
 
-    # 分散共分散行列を計算
-    print("分散共分散行列を計算")
-    cov = get_covariance_matrix(data)
-
     # 固有値と固有ベクトルを計算
     print("固有値と固有ベクトルを計算")
-    eigvals, eigvecs = get_eigen(cov)
+    eigvals, eigvecs = get_eigvals_of_lines(N, M)
 
     # 固有ベクトルを画像に変換して表示
     # print("固有ベクトルを画像に変換して出力")

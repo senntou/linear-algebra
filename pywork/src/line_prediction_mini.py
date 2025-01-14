@@ -2,11 +2,11 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from const import DIM
+from const import DIM, M, N
 from input import get_input_images
 from input import get_input_images_params
 from input import get_rotation_matrix
-from calc import get_covariance_matrix, get_eigen
+from calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
 from utils import output_img
 
 
@@ -111,9 +111,7 @@ def predict_model(x_test):  # モデルを用いた予測
 
 
 def get_eigvecs_diml():  # 固有ベクトルを取得
-    data = get_input_images(100, 100)
-    cov = get_covariance_matrix(data)
-    eigvals, eigvecs = get_eigen(cov)
+    eigvals, eigvecs = get_eigvals_of_lines(N, M)
     return eigvecs[:, :DIM_L]
 
 
@@ -201,9 +199,9 @@ def test_prediction():
 if __name__ == '__main__':
 
     # train
-    # reset_model()
-    # x_train, y_train = generate_data(100, 100)
-    # model = train_model(x_train, y_train, epochs=100)
+    reset_model()
+    x_train, y_train = generate_data(N, M)
+    model = train_model(x_train, y_train, epochs=100)
 
     # evaluate
     x_eval, y_eval = generate_random_data(1000)
