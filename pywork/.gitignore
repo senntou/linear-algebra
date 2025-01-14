@@ -2,3 +2,5 @@ model
 cache
 __pycache__
 output
+
+input.png

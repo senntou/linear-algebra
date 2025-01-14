@@ -11,7 +11,7 @@ from utils import output_img
 
 
 MODEL_DIR = "model"
-MODEL_NAME = MODEL_DIR + "/" + "line_prediction_mini.keras"
+MODEL_NAME = MODEL_DIR + "/" + "line_prediction_mini.weights.h5"
 
 NOISE_STD = 30
 
@@ -28,15 +28,23 @@ THETA_RANGE = THETA_MAX - THETA_MIN
 def save_model(model):  # モデルを保存
     if not os.path.exists(MODEL_DIR):
         os.makedirs(MODEL_DIR)
-    model.save(MODEL_NAME)
+    model.save_weights(MODEL_NAME)
 
 
 def load_model():  # モデルを取得
-    model = tf.keras.models.load_model(MODEL_NAME)
+    model = init_model()
+    model.load_weights(MODEL_NAME)
     return model
 
 
 def init_model():  # モデルの初期化・構築
+
+    def custom_loss(y_true, y_pred):
+        r_true, theta_true = y_true[:, 0], y_true[:, 1]
+        r_pred, theta_pred = y_pred[:, 0], y_pred[:, 1]
+        r_weight = 1 / R_RANGE
+        theta_weight = 1 / THETA_RANGE
+        return r_weight * tf.reduce_mean(tf.square(r_true - r_pred)) + theta_weight * tf.reduce_mean(tf.square(theta_true - theta_pred))
 
     model = tf.keras.models.Sequential(
         [
@@ -59,10 +67,18 @@ def init_model():  # モデルの初期化・構築
             tf.keras.layers.Dense(2)
         ]
     )
+
     # model.compile(optimizer=tf.keras.optimizers.Adam(
     # learning_rate=0.001), loss=custom_loss)
-    model.compile(optimizer='adam', loss='mse')
+    model.compile(optimizer='adam', loss=custom_loss)
+
+    return model
+
+
+def reset_model():  # モデルのリセット
+    model = init_model()
     save_model(model)
+    return model
 
 
 def train_model(x_train, y_train, epochs=10):  # モデルの学習
@@ -185,9 +201,9 @@ def test_prediction():
 if __name__ == '__main__':
 
     # train
-    # init_model()
+    # reset_model()
     # x_train, y_train = generate_data(100, 100)
-    # model = train_model(x_train, y_train, epochs=200)
+    # model = train_model(x_train, y_train, epochs=100)
 
     # evaluate
     x_eval, y_eval = generate_random_data(1000)
