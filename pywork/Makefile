@@ -21,3 +21,6 @@ cache-clean:
 
 line:
 	python src/line_prediction_mini.py
+	
+draw:
+	python src/draw.py
