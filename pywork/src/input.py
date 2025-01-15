@@ -32,6 +32,13 @@ def get_input_images(N, M):
     return np.array(data).T
 
 
+@sqlite_cache("input_except_all_zero.db")
+def get_input_images_except_all_zero(N, M):
+    data = get_input_images(DIM, N, M).T
+    data = data[~np.all(data == 0, axis=1)]
+    return data.T
+
+
 def get_input_images_params(N, M):
     params = []
     for i in range(N):
