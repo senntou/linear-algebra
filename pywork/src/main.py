@@ -2,7 +2,7 @@ from line_prediction_mini import predict_model
 from utils import output_img
 import matplotlib.pyplot as plt
 import numpy as np
-from const import DIM, N, M, BOLD
+from const import DIM, DIM_L, N, M, BOLD
 from input import get_input_images, get_rotation_matrix
 from calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
 
@@ -36,7 +36,6 @@ if __name__ == '__main__':
 
     # 潜在空間への射影
     print("潜在空間への射影")
-    DIM_L = 3
     v = eigvecs[:, :DIM_L]
     y = v.T @ data
 

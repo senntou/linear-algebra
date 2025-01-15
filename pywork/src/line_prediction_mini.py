@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from const import DIM, M, N, R_RANGE, THETA_RANGE
+from const import DIM, DIM_L, M, N, R_RANGE, THETA_RANGE
 from input import get_input_images
 from input import get_input_images_params
 from input import get_rotation_matrix
@@ -14,8 +14,6 @@ MODEL_DIR = "model"
 MODEL_NAME = MODEL_DIR + "/" + "line_prediction_mini.weights.h5"
 
 NOISE_STD = 30
-
-DIM_L = 3
 
 
 def save_model(model):  # モデルを保存
