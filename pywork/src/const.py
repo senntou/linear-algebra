@@ -1,10 +1,10 @@
 import numpy as np
 
-DIM = 32
+DIM = 16
 N = 100  # rの値の数
 M = 100  # thetaの値の数
 
-DIM_L = 3
+DIM_L = 10
 
 BOLD = 2  # 入力画像の直線の太さ
 
