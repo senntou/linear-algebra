@@ -35,7 +35,16 @@ def init_model():  # モデルの初期化・構築
         r_pred, theta_pred = y_pred[:, 0], y_pred[:, 1]
         r_weight = 1 / R_RANGE
         theta_weight = 1 / THETA_RANGE
-        return r_weight * tf.reduce_mean(tf.square(r_true - r_pred)) + theta_weight * tf.reduce_mean(tf.square(theta_true - theta_pred))
+
+        r_loss = tf.reduce_mean(tf.square(r_true - r_pred))
+
+        pi = tf.constant(np.pi, dtype=tf.float32)
+        theta_loss = tf.abs(theta_true - theta_pred)
+        theta_loss = tf.minimum(tf.square(theta_loss),
+                                tf.square(2 * pi - theta_loss))
+        theta_loss = tf.reduce_mean(theta_loss)
+
+        return r_weight * r_loss + theta_weight * theta_loss
 
     model = tf.keras.models.Sequential(
         [
@@ -192,7 +201,7 @@ if __name__ == '__main__':
     # train
     reset_model()
     x_train, y_train = generate_data(N, M)
-    model = train_model(x_train, y_train, epochs=100)
+    model = train_model(x_train, y_train, epochs=300)
 
     # evaluate
     x_eval, y_eval = generate_random_data(1000)

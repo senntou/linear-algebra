@@ -3,6 +3,8 @@ import sqlite3
 import hashlib
 import pickle
 
+from const import DIM
+
 DB_DIR = "cache/"
 
 
@@ -25,7 +27,7 @@ def sqlite_cache(db_path="cache.db"):
 
         def wrapper(*args, **kwargs):
             # キャッシュキーを生成
-            key = hashlib.sha256(pickle.dumps((args, kwargs))).hexdigest()
+            key = hashlib.sha256(pickle.dumps((args, kwargs, DIM))).hexdigest()
 
             # キャッシュをチェック
             cursor.execute("SELECT value FROM cache WHERE key = ?", (key,))
