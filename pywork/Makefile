@@ -3,6 +3,9 @@ all: run
 
 run-temp:
 	python temp.py
+	
+learn:
+	python src/line_prediction_mini.py
 
 run:
 	python src/main2.py
