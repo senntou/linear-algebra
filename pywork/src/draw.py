@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageDraw
+import os
 
 
 class LineDrawingApp:
@@ -55,15 +56,16 @@ class LineDrawingApp:
         self.previous_y = event.y
 
     def save_file(self):
-        # 保存ダイアログを開く
-        file_path = filedialog.asksaveasfilename(
-            defaultextension=".png",
-            filetypes=[("PNGファイル", "*.png")]
-        )
-        if file_path:
-            # PILイメージを保存
-            self.image.save(file_path)
-            print(f"保存しました: {file_path}")
+        # inputディレクトリに保存
+        if not os.path.exists("input"):
+            os.mkdir("input")
+
+        idx = len(os.listdir("input"))
+        file_path = f"input/{idx}.png"
+
+        # PILイメージを保存
+        self.image.save(file_path)
+        print(f"保存しました: {file_path}")
 
 
 if __name__ == "__main__":

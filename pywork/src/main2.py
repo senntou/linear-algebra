@@ -10,9 +10,10 @@ from line_prediction_mini import DIM_L, predict_model, project_to_latent_space
 WIDTH = 800
 HEIGHT = 800
 
+IMG_PATH = "input/0.png"
+
 
 if __name__ == '__main__':
-    IMG_PATH = "input.png"
 
     # 画像の読み込み
     img = Image.open(IMG_PATH)
