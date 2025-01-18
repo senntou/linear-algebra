@@ -1,16 +1,19 @@
 
 all: run
 
-run-temp:
-	python temp.py
+run:
+	python src/main2.py
+
+parametric:
+	python src/parametric.py
 	
 learn:
 	python src/line_prediction_mini.py
 
-run:
-	python src/main2.py
+draw:
+	python src/draw.py
 	
-clean:
+output-clean:
 	rm -rf output
 
 model-clean:
@@ -18,9 +21,7 @@ model-clean:
 	
 cache-clean:
 	rm -rf cache
-
-line:
-	python src/line_prediction_mini.py
 	
-draw:
-	python src/draw.py
+
+run-temp:
+	python temp.py
