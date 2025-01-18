@@ -10,7 +10,7 @@ from line_prediction_mini import DIM_L, predict_model, project_to_latent_space
 WIDTH = BIG_IMAGE_WIDTH
 HEIGHT = BIG_IMAGE_HEIGHT
 
-IMG_PATH = "input/0.png"
+IMG_PATH = "input/1.png"
 
 
 if __name__ == '__main__':
