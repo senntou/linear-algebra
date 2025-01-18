@@ -23,5 +23,5 @@ cache-clean:
 	rm -rf cache
 	
 
-run-temp:
-	python temp.py
+temp:
+	python src/temp.py
