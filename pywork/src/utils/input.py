@@ -1,6 +1,6 @@
 import numpy as np
-from cache import sqlite_cache
-from const import DIM, BOLD, R_MAX, R_MIN, THETA_MAX, THETA_MIN
+from utils.cache import sqlite_cache
+from utils.const import DIM, BOLD, R_MAX, R_MIN, THETA_MAX, THETA_MIN
 
 
 def clamp(x, mn, mx):

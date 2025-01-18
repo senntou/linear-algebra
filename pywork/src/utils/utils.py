@@ -1,6 +1,6 @@
 import os
 import matplotlib.pyplot as plt
-from const import DIM
+from utils.const import DIM
 
 
 def output_img(img, filename, dir="output"):

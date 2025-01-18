@@ -1,7 +1,7 @@
-from cache import sqlite_cache
+from utils.cache import sqlite_cache
 import numpy as np
 
-from input import get_input_images
+from utils.input import get_input_images
 
 
 def get_covariance_matrix(data):

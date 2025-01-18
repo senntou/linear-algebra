@@ -2,12 +2,12 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from const import DIM, DIM_L, M, N, R_RANGE, THETA_RANGE
-from input import get_input_images
-from input import get_input_images_params
-from input import get_rotation_matrix
-from calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
-from utils import output_img
+from utils.const import DIM, DIM_L, M, N, R_RANGE, THETA_RANGE
+from utils.input import get_input_images
+from utils.input import get_input_images_params
+from utils.input import get_rotation_matrix
+from utils.calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
+from utils.utils import output_img
 
 
 MODEL_DIR = "model"

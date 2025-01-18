@@ -2,10 +2,10 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from const import DIM
-from input import get_input_images
-from input import get_input_images_params
-from input import get_rotation_matrix
+from utils.const import DIM
+from utils.input import get_input_images
+from utils.input import get_input_images_params
+from utils.input import get_rotation_matrix
 
 
 NUM = 10000

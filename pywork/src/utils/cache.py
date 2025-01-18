@@ -3,7 +3,7 @@ import sqlite3
 import hashlib
 import pickle
 
-from const import DIM
+from utils.const import DIM
 
 DB_DIR = "cache/"
 

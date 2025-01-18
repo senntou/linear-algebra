@@ -3,6 +3,8 @@ from tkinter import filedialog
 from PIL import Image, ImageDraw
 import os
 
+from utils.const import BIG_IMAGE_HEIGHT, BIG_IMAGE_WIDTH
+
 
 class LineDrawingApp:
     def __init__(self, root):
@@ -10,8 +12,8 @@ class LineDrawingApp:
         self.root.title("line drawing")
 
         # キャンバスサイズ
-        self.canvas_width = 800
-        self.canvas_height = 800
+        self.canvas_width = BIG_IMAGE_WIDTH
+        self.canvas_height = BIG_IMAGE_HEIGHT
 
         # PILイメージを作成（グレースケールモード）
         self.image = Image.new(

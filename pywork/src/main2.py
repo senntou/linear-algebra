@@ -2,13 +2,13 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-from calc import get_eigvals_of_lines
-from const import DIM, M, N
-from input import get_rotation_matrix
+from utils.calc import get_eigvals_of_lines
+from utils.const import BIG_IMAGE_HEIGHT, BIG_IMAGE_WIDTH, DIM, M, N
+from utils.input import get_rotation_matrix
 from line_prediction_mini import DIM_L, predict_model, project_to_latent_space
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = BIG_IMAGE_WIDTH
+HEIGHT = BIG_IMAGE_HEIGHT
 
 IMG_PATH = "input/0.png"
 
