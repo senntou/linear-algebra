@@ -13,6 +13,12 @@ def get_eigen(cov):
     eigvals, eigvecs = np.linalg.eig(cov)
     eigvals = np.real(eigvals)
     eigvecs = np.real(eigvecs)
+
+    # 固有値の大きい順に並び替え
+    idx = np.argsort(eigvals)[::-1]
+    eigvals = eigvals[idx]
+    eigvecs = eigvecs[:, idx]
+
     return eigvals, eigvecs
 
 

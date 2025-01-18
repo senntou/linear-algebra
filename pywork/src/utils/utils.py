@@ -2,6 +2,9 @@ import os
 import matplotlib.pyplot as plt
 from utils.const import DIM
 
+# filename => id のmap
+id_map = {}
+
 
 def output_img(img, filename, dir="output"):
 
@@ -10,11 +13,11 @@ def output_img(img, filename, dir="output"):
 
     plt.imshow(img.reshape(DIM, DIM), cmap="gray")
 
-    id = 1
-    while True:
-        if not os.path.exists(f"{filename}_{id}.png"):
-            break
-        id += 1
+    id = id_map.get(filename)
+    if id is None:
+        id = 1
 
     plt.savefig(f"{dir}/{filename}_{id}.png")
     plt.close()
+
+    id_map[filename] = id + 1

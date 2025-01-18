@@ -14,7 +14,7 @@ def plot_manifold(y_data):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot_surface(x, y, z, cmap='bwr')
-    plt.savefig("manifold.png")
+    plt.savefig("output/manifold.png")
     plt.close()
 
 
@@ -29,10 +29,14 @@ if __name__ == '__main__':
     print("固有値と固有ベクトルを計算")
     eigvals, eigvecs = get_eigvals_of_lines(N, M)
 
+    # 固有値を出力
+    print("固有値を出力")
+    print(eigvals)
+
     # 固有ベクトルを画像に変換して表示
     print("固有ベクトルを画像に変換して出力")
     for i in range(10):
-        output_img(eigvecs[:, i], f"eig{i}.png")
+        output_img(eigvecs[:, i], f"eigvec.png")
 
     # 潜在空間への射影
     print("潜在空間への射影")
