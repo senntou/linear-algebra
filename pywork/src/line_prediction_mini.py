@@ -3,11 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from utils.const import DIM, DIM_L, M, N, R_RANGE, THETA_RANGE
-from utils.input import get_input_images
-from utils.input import get_input_images_params
+from utils.input import get_input_images_except_all_zero
 from utils.input import get_rotation_matrix
-from utils.calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
-from utils.utils import output_img
+from utils.calc import get_eigvals_of_lines
 
 
 MODEL_DIR = "model"
@@ -124,9 +122,10 @@ def project_to_latent_space(x):  # 潜在空間への射影
 
 def generate_data(n, m, times=1):  # データの生成
 
-    x_base = get_input_images(n, m).T
+    y_base, x_base = get_input_images_except_all_zero(N, M)
+    x_base = x_base.T
     x_base = project_to_latent_space(x_base)
-    y_base = get_input_images_params(n, m).T
+    y_base = y_base.T
 
     x = None
     y = None

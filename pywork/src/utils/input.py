@@ -29,14 +29,20 @@ def get_input_images(N, M):
             img = get_rotation_matrix(r, theta)
             img = img.reshape(DIM * DIM)
             data.append(img)
-    return np.array(data).T
+    return np.array(data).T  # shape: (DIM * DIM, N * M)
 
 
 @sqlite_cache("input_except_all_zero.db")
 def get_input_images_except_all_zero(N, M):
-    data = get_input_images(DIM, N, M).T
-    data = data[~np.all(data == 0, axis=1)]
-    return data.T
+    data = get_input_images(N, M)
+    params = get_input_images_params(N, M)
+
+    # dataの各行が全て0の列を削除
+    delete_columns = np.all(is_zero(data), axis=0)
+    data = data[:, ~delete_columns]
+    params = params[:, ~delete_columns]
+
+    return params, data  # data shape: (DIM * DIM, N * M - len(delete_columns))
 
 
 def get_input_images_params(N, M):
@@ -47,4 +53,8 @@ def get_input_images_params(N, M):
             theta = THETA_MIN + (THETA_MAX - THETA_MIN) * j / M
             params.append(np.array([r, theta]))
     params = np.array(params)
-    return params.T
+    return params.T  # shape: (2, N * M)
+
+
+def is_zero(x):
+    return abs(x) < 1e-6
