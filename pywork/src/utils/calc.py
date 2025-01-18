@@ -1,7 +1,7 @@
 from utils.cache import sqlite_cache
 import numpy as np
 
-from utils.input import get_input_images
+from utils.input import get_input_images, get_input_images_except_all_zero
 
 
 def get_covariance_matrix(data):
@@ -24,7 +24,7 @@ def get_eigen(cov):
 
 @sqlite_cache("eigvecs_of_lines.db")
 def get_eigvals_of_lines(N, M):
-    data = get_input_images(N, M)
+    _params, data = get_input_images_except_all_zero(N, M)
     cov = get_covariance_matrix(data)
     eigvals, eigvecs = get_eigen(cov)
     return eigvals, eigvecs

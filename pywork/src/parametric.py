@@ -3,7 +3,7 @@ from utils.utils import output_img
 import matplotlib.pyplot as plt
 import numpy as np
 from utils.const import DIM, DIM_L, N, M, BOLD
-from utils.input import get_input_images, get_rotation_matrix
+from utils.input import get_input_images, get_input_images_except_all_zero, get_rotation_matrix
 from utils.calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
 
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # 画像の読み込み
     print("画像の読み込み")
-    data = get_input_images(N, M)  # 各列が画像のベクトル
+    _params, data = get_input_images_except_all_zero(N, M)  # 各列が画像のベクトル
 
     # 固有値と固有ベクトルを計算
     print("固有値と固有ベクトルを計算")
@@ -44,5 +44,6 @@ if __name__ == '__main__':
     y = v.T @ data
 
     # 多様体をプロット
-    print("多様体をプロット")
-    plot_manifold(y)
+    # except_zeroの場合はうまくうごかない
+    # print("多様体をプロット")
+    # plot_manifold(y)

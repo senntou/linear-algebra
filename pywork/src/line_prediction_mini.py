@@ -124,22 +124,14 @@ def generate_data(n, m, times=1):  # データの生成
 
     y_base, x_base = get_input_images_except_all_zero(N, M)
     x_base = x_base.T
-    x_base = project_to_latent_space(x_base)
     y_base = y_base.T
 
-    x = None
-    y = None
+    # x_baseをtimes回複製
+    x = np.tile(x_base, (times, 1))
+    y = np.tile(y_base, (times, 1))
 
-    for _ in range(times):
-        x_temp = x_base + np.random.normal(0, NOISE_STD, x_base.shape)
-
-        if x is None:
-            x = x_temp
-            y = y_base
-            continue
-        else:
-            x = np.vstack((x, x_temp))
-            y = np.vstack((y, y_base))
+    x = x + np.random.normal(0, NOISE_STD, x.shape)
+    x = project_to_latent_space(x)
 
     return x, y
 
@@ -200,7 +192,7 @@ if __name__ == '__main__':
     # train
     reset_model()
     x_train, y_train = generate_data(N, M)
-    model = train_model(x_train, y_train, epochs=300)
+    model = train_model(x_train, y_train, epochs=100)
 
     # evaluate
     x_eval, y_eval = generate_random_data(1000)
