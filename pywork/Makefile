@@ -2,7 +2,7 @@
 all: run
 
 run:
-	python src/main2.py
+	python src/predict_params.py
 
 parametric:
 	python src/parametric.py
