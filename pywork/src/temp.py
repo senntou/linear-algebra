@@ -2,8 +2,12 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
+from cnn.cnn import LinePrediction
+from cnn.line_prediction_mini import LinePredictionCL
+from cnn.line_prediction_sincos import LinePredictionSC
 from utils.const import DIM, M, N
 from utils.input import get_input_images_except_all_zero
+from utils.predict_params import predict_params_from_image
 
 NUM = 10000
 
@@ -18,13 +22,21 @@ def main_printer(func):
 
 @main_printer
 def main():
-    _params, data = get_input_images_except_all_zero(N, M)
-    data = data.T
-    print(data.shape)
-    for i in range(1, 10):
-        plt.subplot(3, 3, i)
-        plt.imshow(data[i * 80].reshape(DIM, DIM), cmap='gray')
-    plt.show()
+    # instance
+    lp = LinePrediction()
+
+    # train
+    lp.reset_model()
+    x_train, y_train = lp.generate_data(N, M)
+    model = lp.train_model(x_train, y_train, epochs=100)
+
+    # evaluate
+    x_test, y_test = lp.generate_random_data(1000)
+    lp.evaluate_model(x_test, y_test)
+
+    # test
+    lp.test_prediction()
+    predict_params_from_image(lp)
 
 
 if __name__ == "__main__":

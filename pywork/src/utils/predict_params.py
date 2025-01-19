@@ -2,10 +2,10 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
+from cnn.line_prediction_mini import LinePredictionCL
 from utils.calc import get_eigvals_of_lines
-from utils.const import BIG_IMAGE_HEIGHT, BIG_IMAGE_WIDTH, DIM, M, N
+from utils.const import BIG_IMAGE_HEIGHT, BIG_IMAGE_WIDTH, DIM, DIM_L, M, N
 from utils.input import get_rotation_matrix
-from line_prediction_sincos import DIM_L, predict_model, project_to_latent_space
 
 WIDTH = BIG_IMAGE_WIDTH
 HEIGHT = BIG_IMAGE_HEIGHT
@@ -13,8 +13,7 @@ HEIGHT = BIG_IMAGE_HEIGHT
 IMG_PATH = "input/1.png"
 
 
-if __name__ == '__main__':
-
+def predict_params_from_image(lp):
     # 画像の読み込み
     img = Image.open(IMG_PATH)
     img = np.array(img)
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     valid_patches_latent = (v.T @ valid_patches.T).T
     print(valid_patches_latent.shape)
 
-    params = predict_model(valid_patches_latent)
+    params = lp.predict_model(valid_patches_latent)
 
     valid_patches_reconstructed = np.zeros_like(valid_patches)
     for i in range(valid_patches.shape[0]):
@@ -72,6 +71,11 @@ if __name__ == '__main__':
     plt.xticks(np.arange(0, img_reconstructed.shape[1], DIM))
     plt.yticks(np.arange(0, img_reconstructed.shape[0], DIM))
 
-    plt.savefig("save/prparams_2.png", bbox_inches='tight', dpi=200)
-
+    plt.savefig("save/" + lp.MODEL_NAME + "_prp.png",
+                bbox_inches='tight', dpi=200)
     plt.show()
+
+
+if __name__ == "__main__":
+    lp = LinePredictionCL()
+    predict_params_from_image(lp)

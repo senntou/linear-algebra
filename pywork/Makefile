@@ -1,14 +1,11 @@
 
-all: learn run
+all:  temp
 
-run:
-	python src/predict_params.py
+temp:
+	python src/temp.py
 
 parametric:
 	python src/parametric.py
-	
-learn:
-	python src/line_prediction_sincos.py
 
 draw:
 	python src/draw.py
@@ -23,5 +20,3 @@ cache-clean:
 	rm -rf cache
 	
 
-temp:
-	python src/temp.py

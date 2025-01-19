@@ -1,10 +1,8 @@
-from line_prediction_mini import predict_model
 from utils.utils import output_img
 import matplotlib.pyplot as plt
-import numpy as np
-from utils.const import DIM, DIM_L, N, M, BOLD
-from utils.input import get_input_images, get_input_images_except_all_zero, get_rotation_matrix
-from utils.calc import get_covariance_matrix, get_eigen, get_eigvals_of_lines
+from utils.const import DIM_L, N, M
+from utils.input import get_input_images_except_all_zero
+from utils.calc import get_eigvals_of_lines
 
 
 def plot_manifold(y_data):
