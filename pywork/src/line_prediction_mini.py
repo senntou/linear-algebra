@@ -36,6 +36,8 @@ def init_model():  # モデルの初期化・構築
 
         r_loss = tf.reduce_mean(tf.square(r_true - r_pred))
 
+        # theta_loss = tf.reduce_mean(tf.square(theta_true - theta_pred))
+
         pi = tf.constant(np.pi, dtype=tf.float32)
         theta_loss = tf.abs(theta_true - theta_pred)
         theta_loss = tf.minimum(tf.square(theta_loss),
@@ -47,21 +49,12 @@ def init_model():  # モデルの初期化・構築
     model = tf.keras.models.Sequential(
         [
             tf.keras.layers.Input(shape=(DIM_L,)),
-
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
-
-            # tf.keras.layers.Dense(
-            #     16, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
-            # tf.keras.layers.Dense(
-            #     32, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
-            # tf.keras.layers.Dense(
-            #     16, activation="relu", kernel_regularizer=tf.keras.regularizers.l2(0.005)),
-
             tf.keras.layers.Dense(2)
         ]
     )
@@ -184,7 +177,8 @@ def test_prediction():
     plt.subplot(1, 2, 2)
     plt.imshow(img_pred, cmap='gray')
     plt.title("predict")
-    plt.show()
+    # plt.show()
+    plt.savefig("line_prediction_mini.png")
 
 
 if __name__ == '__main__':

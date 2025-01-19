@@ -72,6 +72,6 @@ if __name__ == '__main__':
     plt.xticks(np.arange(0, img_reconstructed.shape[1], DIM))
     plt.yticks(np.arange(0, img_reconstructed.shape[0], DIM))
 
-    plt.savefig("save/prparams_2.png")
+    plt.savefig("save/prparams_2.png", bbox_inches='tight', dpi=200)
 
     plt.show()
