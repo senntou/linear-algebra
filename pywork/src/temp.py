@@ -20,15 +20,12 @@ def main_printer(func):
     return wrapper
 
 
-@main_printer
-def main():
-    # instance
-    lp = LinePrediction()
-
+def predict(lp, train=False, show=False):
     # train
-    lp.reset_model()
-    x_train, y_train = lp.generate_data(N, M)
-    model = lp.train_model(x_train, y_train, epochs=100)
+    if train:
+        lp.reset_model()
+        x_train, y_train = lp.generate_data(N, M)
+        model = lp.train_model(x_train, y_train, epochs=100)
 
     # evaluate
     x_test, y_test = lp.generate_random_data(1000)
@@ -36,7 +33,20 @@ def main():
 
     # test
     lp.test_prediction()
-    predict_params_from_image(lp)
+    predict_params_from_image(lp, show=show)
+
+
+@main_printer
+def main():
+    lp_list = []
+
+    lp_list.append(LinePrediction)
+    lp_list.append(LinePredictionCL)
+    lp_list.append(LinePredictionSC)
+
+    for lp in lp_list:
+        lp_instance = lp()
+        predict(lp_instance)
 
 
 if __name__ == "__main__":

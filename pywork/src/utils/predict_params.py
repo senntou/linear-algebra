@@ -13,7 +13,7 @@ HEIGHT = BIG_IMAGE_HEIGHT
 IMG_PATH = "input/1.png"
 
 
-def predict_params_from_image(lp):
+def predict_params_from_image(lp, show=True):
     # 画像の読み込み
     img = Image.open(IMG_PATH)
     img = np.array(img)
@@ -73,7 +73,11 @@ def predict_params_from_image(lp):
 
     plt.savefig("save/" + lp.MODEL_NAME + "_prp.png",
                 bbox_inches='tight', dpi=200)
-    plt.show()
+
+    if show:
+        plt.show()
+
+    plt.close()
 
 
 if __name__ == "__main__":

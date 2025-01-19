@@ -159,4 +159,7 @@ class LinePrediction:
         plt.imshow(img_pred, cmap='gray')
         plt.title("predict")
         # plt.show()
-        plt.savefig("save/" + self.MODEL_NAME + "_test.png")
+        plt.savefig("save/" + self.MODEL_NAME + "_test.png",bbox_inches='tight', dpi=200)
+        
+        
+        
