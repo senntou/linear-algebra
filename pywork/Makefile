@@ -1,5 +1,5 @@
 
-all: run
+all: learn run
 
 run:
 	python src/predict_params.py
@@ -8,7 +8,7 @@ parametric:
 	python src/parametric.py
 	
 learn:
-	python src/line_prediction_mini.py
+	python src/line_prediction_sincos.py
 
 draw:
 	python src/draw.py
