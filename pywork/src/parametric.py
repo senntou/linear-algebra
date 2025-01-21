@@ -1,6 +1,6 @@
 from utils.utils import output_img
 import matplotlib.pyplot as plt
-from utils.const import DIM_L, N, M
+from utils.const import DIM, DIM_L, N, M
 from utils.input import get_input_images_except_all_zero
 from utils.calc import get_eigvals_of_lines
 
@@ -32,9 +32,30 @@ if __name__ == '__main__':
     print(eigvals)
 
     # 固有ベクトルを画像に変換して表示
-    print("固有ベクトルを画像に変換して出力")
-    for i in range(10):
-        output_img(eigvecs[:, i], f"eigvec.png")
+    # print("固有ベクトルを画像に変換して出力")
+    # for i in range(10):
+    #     output_img(eigvecs[:, i], f"eigvec.png")
+
+    # 1~4番目の固有ベクトルを1枚の画像に変換して出力
+    print("1~4番目の固有ベクトルを1枚の画像に変換して出力")
+    plt.subplot(2, 2, 1)
+    plt.title("1st")
+    plt.imshow(eigvecs[:, 0].reshape(DIM, DIM), cmap='gray')
+
+    plt.subplot(2, 2, 2)
+    plt.title("2nd")
+    plt.imshow(eigvecs[:, 1].reshape(DIM, DIM), cmap='gray')
+
+    plt.subplot(2, 2, 3)
+    plt.title("3rd")
+    plt.imshow(eigvecs[:, 2].reshape(DIM, DIM), cmap='gray')
+
+    plt.subplot(2, 2, 4)
+    plt.title("4th")
+    plt.imshow(eigvecs[:, 3].reshape(DIM, DIM), cmap='gray')
+
+    plt.savefig("output/eigvecs.png", bbox_inches='tight')
+    plt.close()
 
     # 潜在空間への射影
     print("潜在空間への射影")
